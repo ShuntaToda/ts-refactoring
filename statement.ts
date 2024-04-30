@@ -29,7 +29,7 @@ const getPlayAmount = (plays: Plays, perf: Performance): number => {
   return getAmount(perf);
 };
 
-export function statement(invoice: Invoice, plays: Plays): string {
+const statement2 = (invoice: Invoice, plays: Plays): any => {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
@@ -54,4 +54,7 @@ export function statement(invoice: Invoice, plays: Plays): string {
   result += `Amount owed is ${format(totalAmount / 100)}\n`;
   result += `You earned ${volumeCredits} credits\n`;
   return result;
+};
+export function statement(invoice: Invoice, plays: Plays): string {
+  return statement2(invoice, plays);
 }
