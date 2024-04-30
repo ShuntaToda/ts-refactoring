@@ -1,7 +1,8 @@
+export type Performance = {
+  playID: string;
+  audience: number;
+};
 export type Invoice = {
   customer: string;
-  performances: {
-    playID: string;
-    audience: number;
-  }[];
+  performances: Performance[];
 };
