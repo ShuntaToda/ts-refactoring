@@ -1,11 +1,13 @@
-export function statement(invoice: any, plays: any) {
+import { Invoice, Plays } from "./types";
+
+export function statement(invoice: Invoice, plays: Plays): string {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
   const format = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    minimumFractionDigits: 2
+    minimumFractionDigits: 2,
   }).format;
 
   for (let perf of invoice.performances) {
@@ -36,9 +38,7 @@ export function statement(invoice: any, plays: any) {
     if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
 
     // print line for this order
-    result += `  ${play.name}: ${format(thisAmount / 100)} (${
-      perf.audience
-    } seats)\n`;
+    result += `  ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
     totalAmount += thisAmount;
   }
   result += `Amount owed is ${format(totalAmount / 100)}\n`;
