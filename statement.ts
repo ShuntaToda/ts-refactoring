@@ -1,22 +1,29 @@
 import { Invoice, Performance, Plays } from "./types";
 
+const getTragedyAmount = (perf: Performance) => {
+  let thisAmount = 40000;
+  if (perf.audience > 30) {
+    thisAmount += 1000 * (perf.audience - 30);
+  }
+  return thisAmount;
+};
+
+const getComedyAmount = (perf: Performance) => {
+  let thisAmount2 = 30000;
+  if (perf.audience > 20) {
+    thisAmount2 += 10000 + 500 * (perf.audience - 20);
+  }
+  thisAmount2 += 300 * perf.audience;
+  return thisAmount2;
+};
+
 const getPlayAmount = (plays: Plays, perf: Performance): number => {
   const play = plays[perf.playID];
-
   switch (play.type) {
     case "tragedy":
-      let thisAmount = 40000;
-      if (perf.audience > 30) {
-        thisAmount += 1000 * (perf.audience - 30);
-      }
-      return thisAmount;
+      return getTragedyAmount(perf);
     case "comedy":
-      let thisAmount2 = 30000;
-      if (perf.audience > 20) {
-        thisAmount2 += 10000 + 500 * (perf.audience - 20);
-      }
-      thisAmount2 += 300 * perf.audience;
-      return thisAmount2;
+      return getComedyAmount(perf);
     default:
       throw new Error(`unknown type: ${play.type}`);
   }
