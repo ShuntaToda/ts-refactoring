@@ -16,17 +16,17 @@ const getComedyAmount = (perf: Performance) => {
   thisAmount2 += 300 * perf.audience;
   return thisAmount2;
 };
+const getAmountLogics: {
+  [key: string]: (perf: Performance) => number;
+} = {};
+getAmountLogics["tragedy"] = getTragedyAmount;
+getAmountLogics["comedy"] = getComedyAmount;
 
 const getPlayAmount = (plays: Plays, perf: Performance): number => {
   const play = plays[perf.playID];
-  switch (play.type) {
-    case "tragedy":
-      return getTragedyAmount(perf);
-    case "comedy":
-      return getComedyAmount(perf);
-    default:
-      throw new Error(`unknown type: ${play.type}`);
-  }
+  const getAmount = getAmountLogics[play.type];
+  if (getAmount === undefined) throw new Error(`unknown type: ${play.type}`);
+  return getAmount(perf);
 };
 
 export function statement(invoice: Invoice, plays: Plays): string {
