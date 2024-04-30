@@ -4,4 +4,4 @@ export type Invoice = {
     playID: string;
     audience: number;
   }[];
-}[];
+};
