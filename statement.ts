@@ -68,18 +68,16 @@ const statementText = (props: StatementResult) => {
 };
 
 const calcAmount = (invoice: Invoice, plays: Plays): StatementResult => {
-  let totalAmount = 0;
-  let volumeCredits = 0;
-  let invoiceResults = [];
+  const result: StatementResult = { totalAmount: 0, volumeCredits: 0, invoiceResults: [], invoice };
 
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
     const amount = getPlayAmount(plays, perf);
-    volumeCredits += calculateVolumeCredits(perf, plays);
-    invoiceResults.push({ play, perf, amount });
-    totalAmount += amount;
+    result.volumeCredits += calculateVolumeCredits(perf, plays);
+    result.invoiceResults.push({ play, perf, amount });
+    result.totalAmount += amount;
   }
-  return { invoice, totalAmount, volumeCredits, invoiceResults };
+  return result;
 };
 export function statement(invoice: Invoice, plays: Plays): string {
   const result = calcAmount(invoice, plays);
