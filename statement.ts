@@ -63,7 +63,7 @@ const statementText = (props: StatementResult) => {
   return result;
 };
 
-const statement2 = (invoice: Invoice, plays: Plays): StatementResult => {
+const calcAmount = (invoice: Invoice, plays: Plays): StatementResult => {
   let totalAmount = 0;
   let volumeCredits = 0;
   let invoiceArray = [];
@@ -78,6 +78,6 @@ const statement2 = (invoice: Invoice, plays: Plays): StatementResult => {
   return { invoice, totalAmount, volumeCredits, invoiceArray };
 };
 export function statement(invoice: Invoice, plays: Plays): string {
-  const result = statement2(invoice, plays);
+  const result = calcAmount(invoice, plays);
   return statementText(result);
 }
