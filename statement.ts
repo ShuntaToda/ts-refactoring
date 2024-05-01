@@ -10,20 +10,20 @@ type StatementResult = {
 };
 
 const getTragedyAmount = (perf: Performance) => {
-  const thisAmount = 40000;
+  const amount = 40000;
   if (perf.audience > 30) {
-    return thisAmount + 1000 * (perf.audience - 30);
+    return amount + 1000 * (perf.audience - 30);
   } else {
-    return thisAmount;
+    return amount;
   }
 };
 
 const getComedyAmount = (perf: Performance) => {
-  const thisAmount2 = 30000 + 300 * perf.audience;
+  const amount = 30000 + 300 * perf.audience;
   if (perf.audience > 20) {
-    return thisAmount2 + 10000 + 500 * (perf.audience - 20);
+    return amount + 10000 + 500 * (perf.audience - 20);
   } else {
-    return thisAmount2;
+    return amount;
   }
 };
 const getAmountLogics: {
