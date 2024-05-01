@@ -57,15 +57,17 @@ const calculateVolumeCredits = (perf: Performance, plays: Plays): number => {
   }
 };
 
-const statementText = (props: StatementResult) => {
+const statementText = (props: StatementResult): string => {
   const { invoice, totalAmount, volumeCredits, invoiceResults } = props;
-  let result = `Statement for ${invoice.customer}\n`;
+  const result: string[] = [];
+  result.push(`Statement for ${invoice.customer}`);
   invoiceResults.forEach((item) => {
-    result += `  ${item.play.name}: ${formatUsdCurrency(item.amount / 100)} (${item.perf.audience} seats)\n`;
+    result.push(`  ${item.play.name}: ${formatUsdCurrency(item.amount / 100)} (${item.perf.audience} seats)`);
   });
-  result += `Amount owed is ${formatUsdCurrency(totalAmount / 100)}\n`;
-  result += `You earned ${volumeCredits} credits\n`;
-  return result;
+  result.push(`Amount owed is ${formatUsdCurrency(totalAmount / 100)}`);
+  result.push(`You earned ${volumeCredits} credits`);
+  result.push("");
+  return result.join("\n");
 };
 
 const calcAmount = (invoice: Invoice, plays: Plays): StatementResult => {
