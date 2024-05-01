@@ -29,15 +29,16 @@ const getPlayAmount = (plays: Plays, perf: Performance): number => {
   return getAmount(perf);
 };
 
+const formatUsdCurrency = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+}).format;
+
 const statement2 = (invoice: Invoice, plays: Plays): any => {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
-  const format = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format;
 
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
@@ -48,10 +49,10 @@ const statement2 = (invoice: Invoice, plays: Plays): any => {
     if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
 
     // print line for this order
-    result += `  ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
+    result += `  ${play.name}: ${formatUsdCurrency(thisAmount / 100)} (${perf.audience} seats)\n`;
     totalAmount += thisAmount;
   }
-  result += `Amount owed is ${format(totalAmount / 100)}\n`;
+  result += `Amount owed is ${formatUsdCurrency(totalAmount / 100)}\n`;
   result += `You earned ${volumeCredits} credits\n`;
   return result;
 };
