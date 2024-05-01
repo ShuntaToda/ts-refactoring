@@ -35,6 +35,13 @@ const formatUsdCurrency = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
 }).format;
 
+const calculateVolumeCredits = (volumeCredits: number, perf: Performance, plays: Plays): number => {
+  const play = plays[perf.playID];
+  volumeCredits += Math.max(perf.audience - 30, 0);
+  // add extra credit for every ten comedy attendees
+  if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+  return volumeCredits;
+};
 const statement2 = (invoice: Invoice, plays: Plays): any => {
   let totalAmount = 0;
   let volumeCredits = 0;
@@ -43,10 +50,11 @@ const statement2 = (invoice: Invoice, plays: Plays): any => {
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
     const thisAmount = getPlayAmount(plays, perf);
-    // add volume credits
-    volumeCredits += Math.max(perf.audience - 30, 0);
-    // add extra credit for every ten comedy attendees
-    if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+    volumeCredits = calculateVolumeCredits(volumeCredits, perf, plays);
+    // // add volume credits
+    // volumeCredits += Math.max(perf.audience - 30, 0);
+    // // add extra credit for every ten comedy attendees
+    // if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
 
     // print line for this order
     result += `  ${play.name}: ${formatUsdCurrency(thisAmount / 100)} (${perf.audience} seats)\n`;
