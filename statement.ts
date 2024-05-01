@@ -11,7 +11,7 @@ type StatementResult = {
 
 const getTragedyAmount = (perf: Performance) => {
   const amount = 40000;
-  if (perf.audience > 30) {
+  if (30 < perf.audience) {
     return amount + 1000 * (perf.audience - 30);
   } else {
     return amount;
@@ -20,7 +20,7 @@ const getTragedyAmount = (perf: Performance) => {
 
 const getComedyAmount = (perf: Performance) => {
   const amount = 30000 + 300 * perf.audience;
-  if (perf.audience > 20) {
+  if (20 < perf.audience) {
     return amount + 10000 + 500 * (perf.audience - 20);
   } else {
     return amount;
