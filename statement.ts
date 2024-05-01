@@ -42,27 +42,28 @@ const calculateVolumeCredits = (volumeCredits: number, perf: Performance, plays:
   if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
   return volumeCredits;
 };
+
+const statementText = (invoice: Invoice, totalAmount: number, volumeCredits: number, invoiceText: string) => {
+  let result = `Statement for ${invoice.customer}\n`;
+  result += invoiceText;
+  result += `Amount owed is ${formatUsdCurrency(totalAmount / 100)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;
+};
+
 const statement2 = (invoice: Invoice, plays: Plays): any => {
   let totalAmount = 0;
   let volumeCredits = 0;
-  let result = `Statement for ${invoice.customer}\n`;
+  let invoiceText = "";
 
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
     const thisAmount = getPlayAmount(plays, perf);
     volumeCredits = calculateVolumeCredits(volumeCredits, perf, plays);
-    // // add volume credits
-    // volumeCredits += Math.max(perf.audience - 30, 0);
-    // // add extra credit for every ten comedy attendees
-    // if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
-
-    // print line for this order
-    result += `  ${play.name}: ${formatUsdCurrency(thisAmount / 100)} (${perf.audience} seats)\n`;
+    invoiceText += `  ${play.name}: ${formatUsdCurrency(thisAmount / 100)} (${perf.audience} seats)\n`;
     totalAmount += thisAmount;
   }
-  result += `Amount owed is ${formatUsdCurrency(totalAmount / 100)}\n`;
-  result += `You earned ${volumeCredits} credits\n`;
-  return result;
+  return statementText(invoice, totalAmount, volumeCredits, invoiceText);
 };
 export function statement(invoice: Invoice, plays: Plays): string {
   return statement2(invoice, plays);
