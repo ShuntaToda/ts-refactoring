@@ -1,10 +1,12 @@
-import { Invoice, Performance, Plays } from "./types";
+import { Invoice, Performance, Play, Plays } from "./types";
+
+type InvoiceResult = { play: Play; perf: Performance; thisAmount: number };
 
 type StatementResult = {
   invoice: Invoice;
   totalAmount: number;
   volumeCredits: number;
-  invoiceText: string;
+  invoiceArray: InvoiceResult[];
 };
 
 const getTragedyAmount = (perf: Performance) => {
@@ -51,9 +53,11 @@ const calculateVolumeCredits = (volumeCredits: number, perf: Performance, plays:
 };
 
 const statementText = (props: StatementResult) => {
-  const { invoice, totalAmount, volumeCredits, invoiceText } = props;
+  const { invoice, totalAmount, volumeCredits, invoiceArray } = props;
   let result = `Statement for ${invoice.customer}\n`;
-  result += invoiceText;
+  invoiceArray.forEach((item) => {
+    result += `  ${item.play.name}: ${formatUsdCurrency(item.thisAmount / 100)} (${item.perf.audience} seats)\n`;
+  });
   result += `Amount owed is ${formatUsdCurrency(totalAmount / 100)}\n`;
   result += `You earned ${volumeCredits} credits\n`;
   return result;
@@ -62,16 +66,16 @@ const statementText = (props: StatementResult) => {
 const statement2 = (invoice: Invoice, plays: Plays): StatementResult => {
   let totalAmount = 0;
   let volumeCredits = 0;
-  let invoiceText = "";
+  let invoiceArray = [];
 
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
     const thisAmount = getPlayAmount(plays, perf);
     volumeCredits = calculateVolumeCredits(volumeCredits, perf, plays);
-    invoiceText += `  ${play.name}: ${formatUsdCurrency(thisAmount / 100)} (${perf.audience} seats)\n`;
+    invoiceArray.push({ play, perf, thisAmount });
     totalAmount += thisAmount;
   }
-  return { invoice, totalAmount, volumeCredits, invoiceText };
+  return { invoice, totalAmount, volumeCredits, invoiceArray };
 };
 export function statement(invoice: Invoice, plays: Plays): string {
   const result = statement2(invoice, plays);
