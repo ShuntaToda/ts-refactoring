@@ -44,9 +44,9 @@ const formatUsdCurrency = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
 }).format;
 
-const calculateVolumeCredits = (volumeCredits: number, perf: Performance, plays: Plays): number => {
+const calculateVolumeCredits = (perf: Performance, plays: Plays): number => {
   const play = plays[perf.playID];
-  volumeCredits += Math.max(perf.audience - 30, 0);
+  let volumeCredits = Math.max(perf.audience - 30, 0);
   // add extra credit for every ten comedy attendees
   if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
   return volumeCredits;
@@ -71,9 +71,9 @@ const calcAmount = (invoice: Invoice, plays: Plays): StatementResult => {
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
     const amount = getPlayAmount(plays, perf);
-    volumeCredits = calculateVolumeCredits(volumeCredits, perf, plays);
-    invoiceResults.push({ play, perf, amount });
+    volumeCredits += calculateVolumeCredits(perf, plays);
     totalAmount += amount;
+    invoiceResults.push({ play, perf, amount });
   }
   return { invoice, totalAmount, volumeCredits, invoiceResults };
 };
