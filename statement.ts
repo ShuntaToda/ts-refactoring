@@ -70,13 +70,13 @@ const statementText = (props: StatementResult) => {
 const calcAmount = (invoice: Invoice, plays: Plays): StatementResult => {
   const result: StatementResult = { totalAmount: 0, volumeCredits: 0, invoiceResults: [], invoice };
 
-  for (let perf of invoice.performances) {
+  invoice.performances.forEach((perf) => {
     const play = plays[perf.playID];
     const amount = getPlayAmount(plays, perf);
     result.volumeCredits += calculateVolumeCredits(perf, plays);
     result.invoiceResults.push({ play, perf, amount });
     result.totalAmount += amount;
-  }
+  });
   return result;
 };
 export function statement(invoice: Invoice, plays: Plays): string {
